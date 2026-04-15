@@ -3,37 +3,79 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>NEXUS PRO | KEY SYSTEM</title>
+    <title>NEXUS V8 | KEY SYSTEM</title>
     <style>
-        body { background: #0f0f0f; color: white; font-family: sans-serif; display: flex; justify-content: center; align-items: center; height: 100vh; margin: 0; }
-        .box { background: #1a1a1a; padding: 30px; border-radius: 15px; border: 2px solid #6400ff; text-align: center; width: 320px; }
-        .btn { background: #6400ff; color: white; border: none; padding: 10px 20px; border-radius: 5px; cursor: pointer; margin: 10px 0; width: 100%; font-weight: bold; }
-        .btn:disabled { background: #333; cursor: not-allowed; }
-        #keyDisplay { display: none; margin-top: 20px; padding: 10px; background: #222; border: 1px dashed #00ff00; color: #00ff00; font-family: monospace; word-break: break-all; }
+        body { background: #050505; color: #fff; font-family: 'Segoe UI', sans-serif; display: flex; justify-content: center; align-items: center; height: 100vh; margin: 0; overflow: hidden; }
+        .container { background: #111; padding: 40px; border-radius: 20px; border: 1px solid #333; text-align: center; box-shadow: 0 0 20px rgba(100,0,255,0.2); width: 350px; }
+        h2 { color: #6400ff; margin-bottom: 5px; }
+        p { color: #888; font-size: 14px; margin-bottom: 25px; }
+        .btn { display: block; width: 100%; padding: 12px; margin: 10px 0; border: none; border-radius: 8px; font-weight: bold; cursor: pointer; transition: 0.3s; text-decoration: none; }
+        .btn-free { background: #222; color: #fff; border: 1px solid #444; }
+        .btn-free:hover { background: #333; border-color: #6400ff; }
+        .btn-pro { background: linear-gradient(45deg, #6400ff, #bc00ff); color: #fff; }
+        .btn-pro:hover { transform: scale(1.03); box-shadow: 0 0 15px #6400ff; }
+        #timer-box { display: none; margin-top: 20px; }
+        .loader { border: 3px solid #222; border-top: 3px solid #6400ff; border-radius: 50%; width: 30px; height: 30px; animation: spin 1s linear infinite; margin: 10px auto; }
+        @keyframes spin { 0% { transform: rotate(0deg); } 100% { transform: rotate(360deg); } }
+        #key-display { display: none; margin-top: 25px; padding: 15px; background: #000; border: 1px dashed #00ff00; color: #00ff00; border-radius: 10px; }
     </style>
 </head>
 <body>
-    <div class="box">
-        <h2>⚡ NEXUS KEY</h2>
-        <p id="status">Complete all steps to get key</p>
+    <div class="container" id="main-ui">
+        <h2>⚡ NEXUS EXECUTOR</h2>
+        <p>Select your access method below</p>
         
-        <button id="step1" class="btn" onclick="startTimer(1, 60)">STEP 1 (60s)</button>
-        <button id="step2" class="btn" onclick="startTimer(2, 50)" disabled>STEP 2 (50s)</button>
-        
-        <div id="keyDisplay">
-            <p>Your Key (Valid 24h):</p>
-            <strong id="finalKey"></strong>
+        <button class="btn btn-pro" onclick="buyPro()">GET KEY PRO+ (Instant)</button>
+        <button class="btn btn-free" id="free-btn" onclick="startFreeProcess()">GET KEY BIASA (60s)</button>
+
+        <div id="timer-box">
+            <div class="loader"></div>
+            <p id="timer-text">Generating Key... 60s</p>
+        </div>
+
+        <div id="key-display">
+            <small style="color: #888;">YOUR UNIQUE KEY (24H):</small><br>
+            <strong id="final-key" style="font-size: 18px;"></strong>
+            <p style="font-size: 10px; margin-top: 10px; color: #ffaa00;">*Valid only for your device today</p>
         </div>
     </div>
 
     <script>
-        let s1 = false, s2 = false;
+        function buyPro() {
+            // Tuan bisa ganti link ini ke WhatsApp Tuan atau link pembayaran
+            window.location.href = "https://wa.me/NOMOR_TUAN_DISINI?text=Halo%20Mau%20Beli%20Key%20Pro";
+        }
 
-        function startTimer(step, duration) {
-            let btn = document.getElementById('step' + step);
-            let timeLeft = duration;
-            btn.disabled = true;
+        function startFreeProcess() {
+            document.getElementById('free-btn').style.display = 'none';
+            document.getElementById('timer-box').style.display = 'block';
+            let timeLeft = 60;
             
+            let countdown = setInterval(() => {
+                timeLeft--;
+                document.getElementById('timer-text').innerText = `Generating Key... ${timeLeft}s`;
+                
+                if (timeLeft <= 0) {
+                    clearInterval(countdown);
+                    showKey();
+                }
+            }, 1000);
+        }
+
+        function showKey() {
+            document.getElementById('timer-box').style.display = 'none';
+            // Algoritma Unik: NX + Hari + Random String
+            const now = new Date();
+            const dayCode = now.getDate() + (now.getMonth() + 1);
+            const randomID = Math.random().toString(36).substring(2, 8).toUpperCase();
+            const uniqueKey = `NX-V8-${dayCode}-${randomID}`;
+            
+            document.getElementById('key-display').style.display = 'block';
+            document.getElementById('final-key').innerText = uniqueKey;
+        }
+    </script>
+</body>
+</html>
             let timer = setInterval(() => {
                 btn.innerText = `WAITING... ${timeLeft}s`;
                 timeLeft--;
